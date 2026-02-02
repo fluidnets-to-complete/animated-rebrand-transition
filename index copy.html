@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluid Networks &rarr; Complete IT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- 1. ROBUST LAYOUT SETUP --- */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden; /* Prevents scrollbars during animation */
+            font-family: 'Outfit', sans-serif;
+            background-color: #0f172a; /* Dark fallback color */
+        }
+
+        .stage {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+        }
+
+        /* --- 2. BACKGROUND IMAGE LOGIC (CRITICAL FIX) --- */
+        .bg-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            
+            /* THE FIX FOR "TOO BIG":
+               We use 'cover' to ensure no white space, 
+               but 'top center' ensures the logo never drifts off screen. */
+            background-size: cover; 
+            background-position: top center; 
+            background-repeat: no-repeat;
+            
+            /* Visual Transition: 9.5s (Smooth & Slow) */
+            transition: all 9.5s cubic-bezier(0.4, 0, 0.2, 1); 
+            will-change: opacity, filter;
+        }
+
+        /* --- 3. THE IMAGES --- */
+        
+        /* OLD BRAND (Fluid Networks) */
+        .old-brand {
+            /* Make sure this file exists! */
+            background-image: url('old-desktop.png'); 
+            z-index: 10;
+            opacity: 1;
+            filter: blur(0px);
+            background-color: #ffffff; /* White fallback if image misses */
+        }
+
+        /* NEW BRAND (Complete IT) */
+        .new-brand {
+            /* Make sure this file exists! */
+            background-image: url('new-desktop.png'); 
+            z-index: 5;
+            opacity: 0;
+            transform: scale(1.03); /* Subtle zoom */
+            background-color: #ffffff;
+        }
+
+        /* --- MOBILE OPTIMIZATION --- */
+        /* Forces mobile screenshots on screens narrower than 768px */
+        @media (max-width: 768px) {
+            .old-brand { background-image: url('old-mobile.jpeg'); }
+            .new-brand { background-image: url('new-mobile.jpeg'); }
+        }
+
+        /* --- 4. THE MESSAGE OVERLAY --- */
+        .overlay-container {
+            position: absolute;
+            /* Client request: "Slightly vertically top position" */
+            top: 40%; 
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.95);
+            z-index: 100;
+            opacity: 0;
+            width: 85%;
+            max-width: 800px;
+            
+            /* Pop-in animation speed */
+            transition: all 1s ease-out; 
+        }
+
+        .message-card {
+            position: relative;
+            /* Premium Dark Blue Gradient */
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.98) 0%, rgba(49, 46, 129, 0.96) 100%);
+            
+            /* Glass Frosting */
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            
+            padding: 50px 40px;
+            border-radius: 20px;
+            text-align: center;
+            
+            /* Glow Effects */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 
+                0 30px 60px -12px rgba(0, 0, 0, 0.6), 
+                0 0 50px rgba(99, 102, 241, 0.25); /* Indigo Glow */
+        }
+
+        /* Typography */
+        h1 {
+            margin: 0;
+            color: #f1f5f9; /* Soft White */
+            font-weight: 300; /* Thin font for body text */
+            font-size: 2rem;
+            line-height: 1.5;
+        }
+
+        /* --- 5. THE "COMPLETE" LOGO SIMULATION --- */
+        /* This mimics the connected C and O using pure CSS */
+        .brand-name {
+            display: block;
+            margin-top: 10px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700; /* Bold */
+            font-size: 3.5rem;
+            letter-spacing: -1px; /* Tighter letters */
+            
+            /* Gradient Text Color */
+            background: linear-gradient(90deg, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            
+            /* Shadow to make it pop */
+            filter: drop-shadow(0 0 15px rgba(56, 189, 248, 0.3));
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            .message-card { padding: 30px 20px; }
+            h1 { font-size: 1.3rem; }
+            .brand-name { font-size: 2.2rem; }
+        }
+
+        /* --- 6. ANIMATION STATES --- */
+        
+        /* Reveal Text */
+        .stage.show-text .overlay-container {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        /* Morph Background */
+        .stage.morph .old-brand {
+            opacity: 0;
+            filter: blur(40px); /* Deep Blur */
+        }
+
+        .stage.morph .new-brand {
+            opacity: 1;
+            transform: scale(1);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="stage" id="stage">
+        <div class="new-brand bg-layer"></div>
+
+        <div class="old-brand bg-layer"></div>
+
+        <div class="overlay-container">
+            <div class="message-card">
+                <h1>
+                    Fluid Networks is evolving and becoming your
+                    <span class="brand-name">Complete IT</span>
+                    provider!
+                </h1>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- TIMING LOGIC ---
+        // 1. Text shows at 0.5s
+        // 2. Morph starts at 1.0s and takes 9.5s to finish.
+        // 3. Total Animation End = 10.5s
+        // 4. Redirect at 11.5s
+        
+        const TOTAL_DURATION = 11500; 
+        const REDIRECT_URL = "https://complete.net";
+
+        window.addEventListener('load', () => {
+            const stage = document.getElementById('stage');
+
+            // 1. Show Message
+            setTimeout(() => {
+                stage.classList.add('show-text');
+            }, 500);
+
+            // 2. Start Morph
+            setTimeout(() => {
+                stage.classList.add('morph');
+            }, 1000);
+
+            // 3. Redirect
+            setTimeout(() => {
+                window.location.href = REDIRECT_URL;
+            }, TOTAL_DURATION);
+        });
+    </script>
+</body>
+</html>

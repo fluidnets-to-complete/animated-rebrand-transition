@@ -3,204 +3,238 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fluid Networks is becoming Complete IT</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600&display=swap" rel="stylesheet">
+    <title>Fluid Networks is becoming Complete</title>
     
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
     <style>
-        /* --- 1. RESET & BASE SETUP --- */
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            width: 100%;
-            overflow: hidden; /* No scrolling allowed */
-            font-family: 'Outfit', sans-serif;
-            background-color: #0f172a; /* Dark professional fallback */
+        /* --- VARIABLES --- */
+        :root {
+            --complete-dark: #0f1115;
+            --fluid-green: #8cc63f;
+            
+            /* --- OPTIMAL TIMING CONFIGURATION --- */
+            /* 10 seconds is the sweet spot for readability vs. retention */
+            --total-duration: 10s; 
+            
+            /* Wait 2.5s before fading out the old site (gives time to recognize) */
+            --fade-start-delay: 2.5s;
+            
+            /* Take 3s to fade (smooth, but keeps momentum) */
+            --fade-duration: 3s;
         }
 
-        .stage {
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body, html { 
+            height: 100%; 
+            font-family: 'Inter', sans-serif; 
+            overflow: hidden; 
+            background: var(--complete-dark);
+        }
+
+        .wrapper {
             position: relative;
             width: 100%;
             height: 100vh;
         }
 
-        /* --- 2. BACKGROUND IMAGE LOGIC --- */
-        .bg-layer {
+        /* --- BACKGROUND LAYERS --- */
+        .layer {
             position: absolute;
-            top: 0;
-            left: 0;
+            inset: 0;
             width: 100%;
             height: 100%;
-            background-size: cover; 
-            background-position: top center; 
-            background-repeat: no-repeat;
-            
-            /* TIMING: 9.5s visual transition (Fits inside the 10-15s requirement) */
-            transition: all 9.5s cubic-bezier(0.4, 0, 0.2, 1); 
-            will-change: opacity, filter;
+            border: none;
         }
 
-        /* --- 3. THE IMAGES (Client Requirement: Pixel-Close) --- */
-        
-        /* OLD BRAND (Fluid Networks) - Starts Visible */
-        .old-brand {
-            background-image: url('old-desktop.png'); 
-            z-index: 10;
-            opacity: 1;
-            filter: blur(0px);
+        .layer-new-site { z-index: 1; background: white; }
+
+        .layer-old-site {
+            z-index: 2;
+            background: white;
+            animation: fadeOutSite var(--fade-duration) ease-in-out forwards;
+            animation-delay: var(--fade-start-delay);
         }
 
-        /* NEW BRAND (Complete IT) - Starts Hidden */
-        .new-brand {
-            background-image: url('new-desktop.png'); 
-            z-index: 5;
-            opacity: 0;
-            transform: scale(1.03); /* Subtle zoom for cinematic feel */
-        }
-
-        /* --- MOBILE OPTIMIZATION --- */
-        @media (max-width: 768px) {
-            .old-brand { background-image: url('old-mobile.jpeg'); }
-            .new-brand { background-image: url('new-mobile.jpeg'); }
-        }
-
-        /* --- 4. THE MESSAGE OVERLAY --- */
-        .overlay-container {
+        /* --- OVERLAY MASK --- */
+        .overlay-mask {
             position: absolute;
-            top: 42%; /* Vertically higher as requested */
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.95);
+            inset: 0;
             z-index: 100;
-            opacity: 0;
-            width: 85%;
-            max-width: 750px;
-            /* Smooth pop-in animation */
-            transition: all 1s ease-out; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
         }
 
-        .message-card {
-            position: relative;
-            /* Premium "Galaxy" Gradient Background */
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.96) 0%, rgba(49, 46, 129, 0.94) 100%);
-            
-            /* Glass Effect */
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            
-            padding: 50px 40px;
-            border-radius: 20px;
+        /* --- WHITE CARD STYLE --- */
+        .white-card {
+            width: 90%;
+            max-width: 700px;
+            background: #ffffff;
+            color: #1a202c;
+            border-radius: 12px;
+            padding: 50px;
             text-align: center;
-            
-            /* Border & Glow */
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 
-                0 30px 60px -12px rgba(0, 0, 0, 0.5), 
-                0 0 40px rgba(67, 56, 202, 0.3); /* Indigo ambient glow */
-            overflow: hidden;
-        }
-
-        /* Typography */
-        h1 {
-            margin: 0;
-            color: #f8fafc; /* Off-white for readability */
-            font-weight: 300;
-            font-size: 2.2rem;
-            line-height: 1.4;
-        }
-
-        /* The Highlighted Text */
-        .highlight {
-            display: block;
-            margin-top: 15px;
-            font-weight: 600;
-            font-size: 2.8rem;
-            
-            /* Gradient Text: Cyan to Indigo */
-            background: linear-gradient(to right, #22d3ee, #818cf8, #22d3ee);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-size: 200% auto;
-            
-            animation: shine 4s linear infinite;
-        }
-
-        @keyframes shine {
-            to { background-position: 200% center; }
-        }
-
-        /* Mobile Text Adjustments */
-        @media (max-width: 768px) {
-            .message-card { padding: 30px 20px; }
-            h1 { font-size: 1.4rem; }
-            .highlight { font-size: 1.8rem; margin-top: 10px; }
-        }
-
-        /* --- 5. ANIMATION STATES (Triggered by JS) --- */
-        
-        /* State A: Show Text */
-        .stage.show-text .overlay-container {
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
-        }
-
-        /* State B: Morph Backgrounds */
-        .stage.morph .old-brand {
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             opacity: 0;
-            filter: blur(40px); /* Deep blur */
+            transform: translateY(20px);
+            animation: floatIn 0.8s ease-out 0.2s forwards;
         }
 
-        .stage.morph .new-brand {
-            opacity: 1;
-            transform: scale(1);
+        .primary-msg {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #111827;
+            line-height: 1.3;
+            margin-bottom: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .msg-line {
+            display: block;
+        }
+        
+        /* STYLE FOR THE INLINE LOGO */
+        .inline-logo {
+            height: 1.8em; /* Scales relative to text size */
+            width: auto;
+            vertical-align: middle;
+            margin: 0 6px;
+            transform: translateY(-4px); 
+        }
+
+        .supporting-msg {
+            font-size: 1.1rem;
+            color: #4b5563;
+            margin-bottom: 30px;
+            font-weight: 400;
+            margin-top: 10px;
+        }
+
+        .info-pill {
+            display: inline-block;
+            background: #f0fdf4;
+            color: #166534;
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            border: 1px solid #bbf7d0;
+        }
+
+        .about-text {
+            font-size: 0.95rem;
+            color: #6b7280;
+            line-height: 1.6;
+            padding-top: 25px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        /* Progress Bar */
+        .progress-wrapper {
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            margin-top: 30px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: var(--fluid-green);
+            width: 0%;
+            animation: loadProgress var(--total-duration) linear forwards;
+        }
+
+        .manual-link {
+            position: absolute;
+            bottom: 30px;
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .manual-link:hover { color: #fff; text-decoration: underline; }
+
+        @keyframes fadeOutSite {
+            0% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        @keyframes floatIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes loadProgress {
+            to { width: 100%; }
+        }
+
+        @media (max-width: 768px) {
+            .primary-msg { font-size: 1.6rem; }
+            .white-card { padding: 30px 20px; }
+            .inline-logo { height: 1.5em; }
         }
     </style>
 </head>
 <body>
 
-    <div class="stage" id="stage">
-        <div class="new-brand bg-layer"></div>
+    <div class="wrapper">
+        <iframe src="https://complete.net" class="layer layer-new-site"></iframe>
+        <iframe src="https://fluidnets.com" class="layer layer-old-site"></iframe>
 
-        <div class="old-brand bg-layer"></div>
+        <div class="overlay-mask">
+            <div class="white-card">
+                <div class="info-pill">Update in Progress</div>
+                
+                <div class="primary-msg">
+                    <span class="msg-line">Fluid Networks is becoming your</span>
+                    <span class="msg-line">
+                        <img src="complete-logo.png" alt="Complete" class="inline-logo"> 
+                        IT provider!
+                    </span>
+                </div>
+                
+                <div class="supporting-msg">
+                    We’re upgrading your experience—redirecting you now.
+                </div>
 
-        <div class="overlay-container">
-            <div class="message-card">
-                <h1>
-                    Fluid Networks is becoming your
-                    <span class="highlight">Complete IT provider!</span>
-                </h1>
+                <div class="about-text">
+                    We are evolving into <strong>Complete</strong>—bringing expanded coverage across Managed IT, Cybersecurity, Compliance, and Cloud.
+                </div>
+
+                <div class="progress-wrapper">
+                    <div class="progress-bar"></div>
+                </div>
             </div>
+
+            <a href="#" onclick="manualRedirect(); return false;" class="manual-link">
+                Not redirected? Click here.
+            </a>
         </div>
     </div>
 
     <script>
-        // --- TIMING CONFIGURATION ---
-        // Client Requirement: "Finish within about 10–15 seconds"
+        const DESTINATION_URL = "https://complete.net"; 
         
-        // 1. Text appears at 0.5s
-        // 2. Visual Morph starts at 1.0s and takes 9.5s (Total = 10.5s)
-        // 3. Redirect happens at 11.0s (Instant hand-off)
-        
-        const TOTAL_DURATION = 11000; // 11 Seconds
-        const REDIRECT_URL = "https://complete.net";
+        // 10 Seconds: The optimal pace for readability without frustration
+        const REDIRECT_DELAY = 10000; 
 
-        window.addEventListener('load', () => {
-            const stage = document.getElementById('stage');
+        function manualRedirect() {
+            window.location.href = DESTINATION_URL;
+        }
 
-            // Step 1: Reveal Message
-            setTimeout(() => {
-                stage.classList.add('show-text');
-            }, 500);
-
-            // Step 2: Start Background Morph
-            setTimeout(() => {
-                stage.classList.add('morph');
-            }, 1000);
-
-            // Step 3: Redirect
-            setTimeout(() => {
-                window.location.href = REDIRECT_URL;
-            }, TOTAL_DURATION);
-        });
+        setTimeout(manualRedirect, REDIRECT_DELAY);
     </script>
 </body>
 </html>
