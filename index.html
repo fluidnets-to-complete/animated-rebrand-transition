@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluid Networks &rarr; Complete IT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- RESET & LAYOUT --- */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            font-family: 'Outfit', sans-serif;
+            background-color: #020617;
+        }
+
+        .stage {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+        }
+
+        /* --- BACKGROUND LAYERS --- */
+        .bg-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover; 
+            background-position: top center; 
+            background-repeat: no-repeat;
+            
+            /* Animation Duration: 6 Seconds */
+            transition: all 6s cubic-bezier(0.4, 0, 0.2, 1); 
+            will-change: opacity, filter;
+        }
+
+        /* --- DESKTOP IMAGES --- */
+        .old-brand {
+            background-image: url('old-desktop.png'); 
+            z-index: 10;
+            opacity: 1;
+            filter: blur(0px);
+        }
+
+        .new-brand {
+            background-image: url('new-desktop.png'); 
+            z-index: 5;
+            opacity: 0;
+            transform: scale(1.05); 
+        }
+
+        /* --- MOBILE IMAGES --- */
+        @media (max-width: 768px) {
+            .old-brand { background-image: url('old-mobile.jpeg'); }
+            .new-brand { background-image: url('new-mobile.jpeg'); }
+        }
+
+        /* --- THE MESSAGE OVERLAY --- */
+        .overlay-container {
+            position: absolute;
+            
+            /* CHANGED: Moved from 50% to 42% to sit slightly higher */
+            top: 42%; 
+            left: 50%;
+            
+            transform: translate(-50%, -50%) scale(0.9);
+            z-index: 100;
+            opacity: 0;
+            width: 90%;
+            max-width: 700px;
+            transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); 
+        }
+
+        .celebration-card {
+            position: relative;
+            
+            /* Rich Galaxy Gradient */
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.98) 0%, rgba(55, 48, 163, 0.95) 100%);
+            
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            padding: 50px 40px;
+            border-radius: 24px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            
+            /* Ambient Glow */
+            box-shadow: 
+                0 30px 80px -10px rgba(67, 56, 202, 0.6), 
+                inset 0 0 20px rgba(255, 255, 255, 0.05); 
+            overflow: hidden;
+        }
+
+        /* Spotlight Effect */
+        .celebration-card::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 2; 
+        }
+
+        /* Typography */
+        h1 {
+            margin: 0;
+            color: #e0e7ff; 
+            font-weight: 300;
+            font-size: 2rem;
+            line-height: 1.5;
+            letter-spacing: 0.5px;
+        }
+
+        /* Shimmering Text */
+        .highlight {
+            display: block;
+            margin-top: 15px;
+            font-weight: 800;
+            font-size: 3.2rem;
+            
+            /* Cyber Cyan to Electric Purple Gradient */
+            background: linear-gradient(to right, #22d3ee, #e879f9, #22d3ee);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            
+            /* Crisp Glow */
+            filter: drop-shadow(0 0 20px rgba(34, 211, 238, 0.4));
+            animation: textShimmer 3s linear infinite;
+        }
+
+        @keyframes textShimmer {
+            to { background-position: 200% center; }
+        }
+
+        @media (max-width: 768px) {
+            .celebration-card { padding: 35px 20px; }
+            h1 { font-size: 1.3rem; }
+            .highlight { font-size: 2rem; margin-top: 10px; }
+        }
+
+        /* --- ACTIVE STATES --- */
+        .stage.show-text .overlay-container {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        /* CHANGED: Increased blur from 20px to 50px for a massive fade effect */
+        .stage.morph .old-brand { opacity: 0; filter: blur(50px); }
+        .stage.morph .new-brand { opacity: 1; transform: scale(1); }
+    </style>
+</head>
+<body>
+
+    <div class="stage" id="stage">
+        <div class="new-brand bg-layer"></div>
+        <div class="old-brand bg-layer"></div>
+
+        <div class="overlay-container">
+            <div class="celebration-card">
+                <div class="card-content">
+                    <h1>
+                        Fluid Networks is evolving into your
+                        <span class="highlight">Complete IT Provider!</span>
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // CONFIGURATION
+        // Animation End Time = 0.5s (Start) + 6.0s (Morph) = 6.5s
+        // Redirect set to 7.0s for a perfect handoff.
+        
+        const TOTAL_DURATION = 7000; 
+        const REDIRECT_URL = "https://complete.net";
+
+        window.addEventListener('load', () => {
+            const stage = document.getElementById('stage');
+
+            // 1. Show Message (Instant)
+            setTimeout(() => { stage.classList.add('show-text'); }, 100);
+
+            // 2. Start Morph (0.5s delay)
+            setTimeout(() => { stage.classList.add('morph'); }, 500);
+
+            // 3. Redirect (7s)
+            setTimeout(() => { window.location.href = REDIRECT_URL; }, TOTAL_DURATION);
+        });
+    </script>
+</body>
+</html>
